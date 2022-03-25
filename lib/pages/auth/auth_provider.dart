@@ -19,32 +19,39 @@ class AuthProvider extends ChangeNotifier {
   );
 
   String _email = "";
-  String _userId = "";
   String _password = "";
+  String _userId = "";
   String _retypePassword = "";
+  String _error = "";
 
   String get email => _email;
-  String get userId => _userId;
   String get password => _password;
+  String get userId => _userId;
   String get retypePassword => _retypePassword;
+  String get error => _error;
 
-  void setEmail(String value) {
+  set email(String value) {
     _email = value;
     notifyListeners();
   }
 
-  void setUserId(String value) {
-    _userId = value;
-    notifyListeners();
-  }
-
-  void setPassword(String value) {
+  set password(String value) {
     _password = value;
     notifyListeners();
   }
 
-  void setRetypePassword(String value) {
+  set retypePassword(String value) {
     _retypePassword = value;
+    notifyListeners();
+  }
+
+  set userId(String value) {
+    _userId = value;
+    notifyListeners();
+  }
+
+  set error(String value) {
+    _error = value;
     notifyListeners();
   }
 

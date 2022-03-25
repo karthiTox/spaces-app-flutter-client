@@ -3,34 +3,8 @@ import 'package:provider/provider.dart';
 
 import 'package:spaces/pages/auth/auth_provider.dart';
 
-class SignupPage extends StatefulWidget {
+class SignupPage extends StatelessWidget {
   const SignupPage({Key? key}) : super(key: key);
-
-  @override
-  State<SignupPage> createState() => _SignupPageState();
-}
-
-class _SignupPageState extends State<SignupPage> {
-  bool isLoading = false;
-  String errorMessage = "";
-
-  Future<void> onSignupBtnPressed() async {
-    setState(() => {isLoading = true, errorMessage = ""});
-
-    try {
-      await Provider.of<AuthProvider>(context, listen: false).register();
-      Navigator.of(context).pushNamedAndRemoveUntil(
-          '/auth/userId', (Route<dynamic> route) => false);
-    } catch (error) {
-      setState(() => errorMessage = error.toString());
-    } finally {
-      setState(() => isLoading = false);
-    }
-  }
-
-  void onLoginBtnPressed() {
-    Navigator.pop(context);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,89 +12,165 @@ class _SignupPageState extends State<SignupPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Sign up", style: Theme.of(context).textTheme.headline1),
+        title: Text("Signin", style: Theme.of(context).textTheme.headline1),
       ),
-      body: Align(
-        alignment: Alignment.center,
-        child: Container(
-          width: 350,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text("Create an account",
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.headline1),
-              const SizedBox(height: spacing),
+      body: Stack(
+        children: const [
+          Padding(
+            padding: EdgeInsets.only(
+                left: spacing, right: spacing, top: spacing * 0.5),
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: InputSection(),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.all(spacing),
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: BottomSection(),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
 
-              // _Email_ input field.
-              TextField(
-                decoration: const InputDecoration(hintText: "Email"),
-                style: Theme.of(context).textTheme.headline6,
-                onChanged: Provider.of<AuthProvider>(context).setEmail,
-              ),
-              const SizedBox(height: spacing * 0.5),
+class InputSection extends StatelessWidget {
+  const InputSection({Key? key}) : super(key: key);
 
-              // _Password_ input field.
-              TextField(
-                decoration: const InputDecoration(hintText: "Password"),
-                style: Theme.of(context).textTheme.headline6,
-                onChanged: Provider.of<AuthProvider>(context).setPassword,
-              ),
-              const SizedBox(height: spacing * 0.5),
+  @override
+  Widget build(BuildContext context) {
+    const spacing = 20.0;
+    final theme = Theme.of(context);
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
-              // _Retype password_ input field.
-              TextField(
-                decoration: const InputDecoration(hintText: "Retype password"),
-                style: Theme.of(context).textTheme.headline6,
-                onChanged: Provider.of<AuthProvider>(context).setRetypePassword,
-              ),
-              const SizedBox(height: spacing),
+    return ListView(
+      children: [
+        // Text(
+        //   "Spaces",
+        //   style: theme.textTheme.headline1,
+        //   textAlign: TextAlign.center,
+        // ),
 
-              if (errorMessage != "")
-                Text(errorMessage,
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context)
-                        .textTheme
-                        .headline6
-                        ?.copyWith(color: Theme.of(context).colorScheme.error)),
+        // const SizedBox(height: spacing * 0.5),
 
-              if (errorMessage != "") const SizedBox(height: spacing),
+        Text(
+          "Email",
+          textAlign: TextAlign.start,
+          style: theme.textTheme.headline6,
+        ),
 
-              if (!isLoading)
-                ElevatedButton(
-                    child: Text(
-                      "Continue",
-                      style: Theme.of(context).textTheme.headline6,
-                    ),
-                    onPressed: onSignupBtnPressed)
+        const SizedBox(height: spacing * 0.5),
 
-              else
-                ElevatedButton(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: CircularProgressIndicator(
-                        backgroundColor:
-                            Theme.of(context).colorScheme.onPrimary),
-                  ),
-                  onPressed: null,
-                ),                
-              const SizedBox(height: spacing),
+        // Email
+        TextField(
+          decoration: const InputDecoration(hintText: "your@email.com"),
+          style: theme.textTheme.headline6,
+          onChanged: (value) => authProvider.email = value,
+        ),
 
-              GestureDetector(
-                onTap: onLoginBtnPressed,
-                child: Text(
-                  "Already have an account?",
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.headline6?.copyWith(
-                      color: Theme.of(context).colorScheme.secondary),
-                ),
-              ),
-              const SizedBox(height: spacing),
-            ],
+        const SizedBox(height: spacing * 0.5),
+
+        Text(
+          "Password",
+          textAlign: TextAlign.start,
+          style: theme.textTheme.headline6,
+        ),
+
+        const SizedBox(height: spacing * 0.5),
+
+        // Password
+        TextField(
+          decoration: const InputDecoration(hintText: "****"),
+          style: theme.textTheme.headline6,
+          obscureText: true,
+          onChanged: (value) => authProvider.password = value,
+        ),
+
+        const SizedBox(height: spacing * 0.5),
+
+        Text(
+          "Retype Password",
+          textAlign: TextAlign.start,
+          style: theme.textTheme.headline6,
+        ),
+
+        const SizedBox(height: spacing * 0.5),
+
+        // Password
+        TextField(
+          decoration: const InputDecoration(hintText: "****"),
+          style: theme.textTheme.headline6,
+          obscureText: true,
+          onChanged: (value) => authProvider.retypePassword = value,
+        ),
+      ],
+    );
+  }
+}
+
+class BottomSection extends StatelessWidget {
+  const BottomSection({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    const spacing = 20.0;
+    final theme = Theme.of(context);
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          Provider.of<AuthProvider>(context, listen: true).error,
+          textAlign: TextAlign.center,
+          style: theme.textTheme.headline6?.copyWith(
+            color: theme.colorScheme.error,
           ),
         ),
-      ),
+        const SizedBox(height: spacing),
+        ElevatedButton(
+          child: Text("signin", style: Theme.of(context).textTheme.headline6),
+          onPressed: () {
+            authProvider.error = "";
+            authProvider.login().then((value) {
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                '/auth/userId',
+                (Route<dynamic> route) => false,
+              );
+            }).catchError((error) {
+              authProvider.error = error.toString();
+            });
+          },
+        ),
+        const SizedBox(height: spacing),
+        GestureDetector(
+          child: SizedBox(
+            width: double.infinity,
+            height: 30,
+            child: Text(
+              "Already have an account?",
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.headline6?.copyWith(
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+            ),
+          ),
+          onTap: () {
+            if (Navigator.canPop(context)) {
+              Navigator.pop(context);
+            } else {
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                '/auth/login',
+                (Route<dynamic> route) => false,
+              );
+            }
+          },
+        )
+      ],
     );
   }
 }
