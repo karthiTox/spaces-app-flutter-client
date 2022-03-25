@@ -5,7 +5,7 @@ import 'package:spaces/utilities/api/api.dart';
 import 'package:spaces/utilities/db.dart';
 
 class AuthHandler {
-  late final ApiInterface _api;
+  late final Api _api;
   late final DB _db;
 
   final _authState = StreamController<User?>.broadcast();
@@ -14,7 +14,7 @@ class AuthHandler {
 
   User? currentUser;
 
-  AuthHandler({required ApiInterface api, required DB db}) {
+  AuthHandler({required Api api, required DB db}) {
     _api = api;
     _db = db;
 
@@ -58,6 +58,6 @@ class AuthHandler {
 
   Future<void> signOut() async {
     await _db.delCurrentUser();
-    _updateAuthState(null);    
+    _updateAuthState(null);
   }
 }

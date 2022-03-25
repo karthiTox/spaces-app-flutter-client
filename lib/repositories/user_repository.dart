@@ -3,17 +3,17 @@ import 'package:spaces/utilities/api/api.dart';
 import 'package:spaces/utilities/authHandler.dart';
 
 class UserRepository {
-  late final ApiInterface _api;
+  late final Api _api;
   late final AuthHandler _auth;
 
   UserRepository({
     required AuthHandler authHandler,
-    required ApiInterface api,
+    required Api api,
   }) {
     _api = api;
     _auth = authHandler;
   }
-  
+
   // users api call
   Future<User> findOneByUserId(String userId) =>
       _api.userApi.findOneByUserId(_auth.getToken(), userId);

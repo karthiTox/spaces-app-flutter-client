@@ -1,38 +1,29 @@
 import 'dart:async';
-import 'dart:developer';
-
 import 'package:spaces/data/user.dart';
 import 'package:spaces/utilities/api/api.dart';
-import 'package:spaces/utilities/authHandler.dart';
-import 'package:spaces/utilities/db.dart';
 
-import '../config.dart';
-import '../data/message.dart';
-import '../utilities/injector.dart';
-import '../utilities/socket_io.dart';
+import 'package:spaces/utilities/db/db.dart';
 
 class AuthRepository {
-  late final AuthHandler _authHandler;
+  final Api api;
+  final DBInterface db;
+  User? currentUser;
 
-  late final Stream<User?> authState;
-  User? get currentUser => _authHandler.currentUser;
+  AuthRepository({required this.api, required this.db});
 
-  AuthRepository({required AuthHandler authHandler}) {
-    _authHandler = authHandler;
-
-    authState = _authHandler.getAuthState;
-
-
+  Future<User> login(String email, String password) async {
+    final user = await api.authApi.login(email, password);
+    await db.authDB.setCurrentUser(user);
+    return user;
   }
 
-  Future<bool> Function() get isAuth => _authHandler.isAuth;
+  Future<User> register(String email, String password) async {
+    final newUser = await api.authApi.registerNewAccount(email, password);
+    await db.authDB.setCurrentUser(newUser);
+    return newUser;
+  }
 
-  void dispose() {}
-
-  Future<User> Function(String, String) get login => _authHandler.login;
-
-  Future<User> Function(String, String) get register =>
-      _authHandler.registerNewAccount;
-
-  Future<void> Function() get signOut => _authHandler.signOut;
+  Future<void> logout() async {
+    await db.authDB.delCurrentUser();
+  }
 }

@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+// // import 'package:/.dart';
+// import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:spaces/config.dart';
 import 'package:spaces/data/message.dart';
@@ -19,36 +19,36 @@ class ChatsProvider extends ChangeNotifier {
   final AuthRepository _authRepository;
   final UserRepository _userRepository;
   final ChatRepository _chatRepository;
-  final AnalyticInterface _mixPanelInterface;
+  // final AnalyticInterface _mixPanelInterface;
 
   ChatsProvider(
     this._authRepository,
     this._userRepository,
     this._chatRepository,
-    this._mixPanelInterface,
+    // this._mixPanelInterface,
   ) {
-    _authRepository.authState.listen((event) {
-      log(event.toString());
-      if (event != null) {
-        //     final socket = SocketIO(baseUrl: "http://192.168.5.247:3000/api");
-        // socket.startConnection(event.token);
-        // socket.joinSocketRoom(["6210adbd27879a63d5a3c1f9"]);
-        // socket.getMessageResponse.listen((event) {
-        //   log(event.toString());
-        // });
-        // socket.sendMessage(Message(
-        //   chatId: "6210adbd27879a63d5a3c1f9",
-        //   parentId: "6210adbd27879a63d5a3c1f9",
-        //   referenceNumber: 0,
-        //   type: "",
-        //   data: "parent",
-        //   createdAt: 0,
-        //   createdBy: "",
-        // ));
-        // socket.leaveSocketRoom(["6210adbd27879a63d5a3c1f9"]);
-        // socket.disconnect();
-      }
-    });
+    // _authRepository.authState.listen((event) {
+    //   log(event.toString());
+    //   if (event != null) {
+    //     //     final socket = SocketIO(baseUrl: "http://192.168.5.247:3000/api");
+    //     // socket.startConnection(event.token);
+    //     // socket.joinSocketRoom(["6210adbd27879a63d5a3c1f9"]);
+    //     // socket.getMessageResponse.listen((event) {
+    //     //   log(event.toString());
+    //     // });
+    //     // socket.sendMessage(Message(
+    //     //   chatId: "6210adbd27879a63d5a3c1f9",
+    //     //   parentId: "6210adbd27879a63d5a3c1f9",
+    //     //   referenceNumber: 0,
+    //     //   type: "",
+    //     //   data: "parent",
+    //     //   createdAt: 0,
+    //     //   createdBy: "",
+    //     // ));
+    //     // socket.leaveSocketRoom(["6210adbd27879a63d5a3c1f9"]);
+    //     // socket.disconnect();
+    //   }
+    // });
   }
 
   // chat page
@@ -57,9 +57,9 @@ class ChatsProvider extends ChangeNotifier {
     final chats = await _chatRepository.findCurrentUserChat();
     for (var chat in chats) {
       log("unsubscribeFromTopic: " + chat.id);
-      FirebaseMessaging.instance.unsubscribeFromTopic(chat.id);
+      // FirebaseMessaging.instance.unsubscribeFromTopic(chat.id);
     }
-    await _authRepository.signOut();
+    await _authRepository.logout();
   }
 
   Future<bool> isNewChat(Chat chat) async {
@@ -187,7 +187,7 @@ class ChatsProvider extends ChangeNotifier {
     final chats = await _chatRepository.findCurrentUserChat();
     for (var chat in chats) {
       log(chat.id);
-      FirebaseMessaging.instance.subscribeToTopic(chat.id);
+      // FirebaseMessaging.instance.subscribeToTopic(chat.id);
     }
     return chats;
   }
@@ -221,7 +221,7 @@ class ChatsProvider extends ChangeNotifier {
     _chatRepository.getAllMessagesByChatId(newChatId).then(addMessageInTree);
     _currentParentId = newChatId;
 
-    _mixPanelInterface.trackOpenedChat(newChatId);
+    // _mixPanelInterface.trackOpenedChat(newChatId);
   }
 
   void setParentId(String newParentId) {
@@ -286,16 +286,16 @@ class ChatsProvider extends ChangeNotifier {
     ));
 
     if (_currentParentId == "") {
-      _mixPanelInterface.trackCreatedSpace(message.chatId);
+      // _mixPanelInterface.trackCreatedSpace(message.chatId);
       setParentId(message.messageId);
     } else {
       final bool isMine = _messageTree[_currentParentId]?[0].createdBy ==
           _authRepository.currentUser?.userId;
-      _mixPanelInterface.trackReplied(currentChatId, isMine);
+      // _mixPanelInterface.trackReplied(currentChatId, isMine);
     }
   }
 
   void flushAllTrackedEvents() {
-    _mixPanelInterface.flushAll();
+    // _mixPanelInterface.flushAll();
   }
 }

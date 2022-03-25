@@ -1,4 +1,11 @@
-import 'dart:ffi';
+// import 'dart:ffi';
+// it is showing error when import 'dart:fii';
+// : Error: Not found: 'dart:ffi'
+// lib/…/chats/chat_cards_page.dart:1
+// import 'dart:ffi';
+//        ^
+
+// Failed to compile application.
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';

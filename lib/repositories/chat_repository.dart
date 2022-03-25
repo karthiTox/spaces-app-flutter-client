@@ -10,7 +10,7 @@ import 'package:spaces/utilities/socket_io.dart';
 import '../data/user.dart';
 
 class ChatRepository {
-  late final ApiInterface _api;
+  late final Api _api;
   late final AuthHandler _auth;
   late final DB _db;
   late final SocketIO _sio;
@@ -19,7 +19,7 @@ class ChatRepository {
 
   ChatRepository({
     required AuthHandler authHandler,
-    required ApiInterface api,
+    required Api api,
     required DB db,
     required SocketIO sio,
   }) {
@@ -58,7 +58,8 @@ class ChatRepository {
   }
 
   // db
-  Future<void> Function(String, int) get setRefernceNumber => _db.setRefernceNumber;
+  Future<void> Function(String, int) get setRefernceNumber =>
+      _db.setRefernceNumber;
   Future<int> Function(String) get getRefernceNumber => _db.getRefernceNumber;
 
   Future<Message> sendMessage(Message message) => _sio.sendMessage(message);

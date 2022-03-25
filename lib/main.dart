@@ -2,9 +2,8 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:spaces/pages/auth/login_page.dart';
 import 'package:spaces/pages/auth/auth_provider.dart';
@@ -19,31 +18,35 @@ import 'package:spaces/pages/chats/messages_page.dart';
 import 'package:spaces/pages/splash.dart';
 import 'package:spaces/pages/theme.dart';
 import 'package:spaces/utilities/injector.dart';
-import 'package:mixpanel_flutter/mixpanel_flutter.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: const FirebaseOptions(
-      apiKey: "AIzaSyDGc5x1BPMh3LbMkJ0YMSC2dMlgbL4GRJs",
-      projectId: "spaces-dc4e8",
-      messagingSenderId: "364364851396",
-      appId: "1:364364851396:web:0f39e0ec68d6c12b884191",
-    ),
-  );
-  FirebaseMessaging.onMessage.listen((RemoteMessage event) {
-    print(event);
-  });
+  try {
+    // WidgetsFlutterBinding.ensureInitialized();
+    // await Firebase.initializeApp(
+    //   options: const FirebaseOptions(
+    //     apiKey: "AIzaSyDGc5x1BPMh3LbMkJ0YMSC2dMlgbL4GRJs",
+    //     projectId: "spaces-dc4e8",
+    //     messagingSenderId: "364364851396",
+    //     appId: "1:364364851396:web:0f39e0ec68d6c12b884191",
+    //   ),
+    // );
+    // FirebaseMessaging.onMessage.listen((RemoteMessage event) {
+    //   print(event);
+    // });
 
-  await setupLocator();
-  runApp(const MyApp());
+    await setupLocator();
+    runApp(const MyApp());
+  } on PlatformException catch (e) {
+    print(e.details.toString() + "\n" + e.message.toString() + "\n" + e.code);
+    throw e;
+  }
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {    
+  Widget build(BuildContext context) {
     final ThemeData themeData = ThemeData.dark().copyWith(
       colorScheme: const ColorScheme.dark().copyWith(
         primary: AppTheme.colorPrimary,
@@ -71,11 +74,11 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (_) => AuthProvider(locator.get(), locator.get(), locator.get()),
+          create: (_) => AuthProvider(locator.get(), locator.get()),
         ),
         ChangeNotifierProvider(
           create: (_) =>
-              ChatsProvider(locator.get(), locator.get(), locator.get(), locator.get()),
+              ChatsProvider(locator.get(), locator.get(), locator.get()),
         ),
       ],
       builder: (innerCtx, _) => MaterialApp(

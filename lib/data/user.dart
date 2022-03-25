@@ -4,12 +4,15 @@ part 'user.g.dart';
 
 @HiveType(typeId: 0)
 class User extends HiveObject {
-  @HiveField(0) final String userId;
-  @HiveField(1) final String email;
+  @HiveField(0)
+  final String userId;
+  @HiveField(1)
+  final String email;
   final String password;
-  @HiveField(2) final String uid;
+  @HiveField(2)
+  final String uid;
   int v;
-  
+
   String token;
 
   User({

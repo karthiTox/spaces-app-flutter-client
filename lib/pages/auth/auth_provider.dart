@@ -10,15 +10,13 @@ import 'package:spaces/utilities/mix_panel.dart';
 class AuthProvider extends ChangeNotifier {
   final AuthRepository _authRepository;
   final UserRepository _userRepository;
-  final AnalyticInterface _mixPanelInterface;
+  // final AnalyticInterface _mixPanelInterface;
 
-  AuthProvider(this._authRepository, this._userRepository, this._mixPanelInterface);
-
-  @override
-  void dispose() {  
-    _authRepository.dispose();
-    super.dispose();
-  }
+  AuthProvider(
+    this._authRepository,
+    this._userRepository,
+    // this._mixPanelInterface
+  );
 
   String _email = "";
   String _userId = "";
@@ -50,16 +48,12 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> Function() get isAuth => _authRepository.isAuth;
-
-  Stream<User?> get authState => _authRepository.authState;
-
   Future<User> login() async {
     _validateEmail(_email);
     _validatePassword(_password);
 
     final user = await _authRepository.login(_email, _password);
-    _mixPanelInterface.initUser(user);
+    // _mixPanelInterface.initUser(user);
     return user;
   }
 
@@ -71,7 +65,7 @@ class AuthProvider extends ChangeNotifier {
     }
 
     final user = await _authRepository.register(_email, _password);
-    _mixPanelInterface.initUser(user);
+    // _mixPanelInterface.initUser(user);
     return user;
   }
 
@@ -105,8 +99,7 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  Future<User> setId() =>
-      _userRepository.changeUserId( _userId);
+  Future<User> setId() => _userRepository.changeUserId(_userId);
 
   // input validators
   final _emailRegEx = RegExp(
@@ -123,13 +116,9 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-
-
-
-
   // events
 
-  updateInitialTrackingData() {    
-    _mixPanelInterface.updateInitialData();
+  updateInitialTrackingData() {
+    // _mixPanelInterface.updateInitialData();
   }
 }

@@ -7,21 +7,15 @@ class Splash extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Provider.of<AuthProvider>(context, listen: false).isAuth().then(
-      (isLoggedIn) {
-        if(isLoggedIn) Provider.of<AuthProvider>(context, listen: false).updateInitialTrackingData();
-
-        Navigator.of(context).pushNamedAndRemoveUntil(
-          isLoggedIn ? '/chats/main' : '/auth/login',
-          (route) => false,
-        );
-      },
+    Navigator.of(context).pushNamedAndRemoveUntil(
+      '/auth/login',
+      (route) => false,
     );
 
     return const Scaffold(
       backgroundColor: Colors.black,
       body: Center(
-        child: Text("Welcome to the Spaces!"),
+        child: Text("Welcome to the Spaces!\nchange this screen"),
       ),
     );
   }
