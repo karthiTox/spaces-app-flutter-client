@@ -1,16 +1,15 @@
-import 'dart:convert';
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:spaces/data/user.dart';
-import 'package:spaces/utilities/api/api_helper.dart';
-import 'package:spaces/utilities/shared_storage.dart';
+import 'package:spaces/utilities/api/base_client.dart';
 
-class AuthApi extends ApiHelper {
+class AuthApi {
   // handle the failed responses clearly.
   // currently it is returning the status code as an Exception message.
   // Don't return response body
 
-  AuthApi(String baseUrl) : super(baseUrl);
+  final HttpClient client;
+
+  AuthApi(this.client);
 
   Future<User> login(String email, String password) async {
     final body = {
@@ -18,14 +17,13 @@ class AuthApi extends ApiHelper {
       "password": password,
     };
 
-    final response = await http.post(
-      buildFullUrl("/auth/login"),
-      headers: defaultHeaders,
-      body: encodeRequestBody(body),
+    final response = await client.post(
+      Uri.parse("/auth/login"),
+      body: client.encodeRequestBody(body),
     );
 
-    if (isResponseSuccessful(response.statusCode)) {
-      return User.fromJson(decodeResponseBody(response.body));
+    if (client.isResponseSuccessful(response.statusCode)) {
+      return User.fromJson(client.decodeResponseBody(response.body));
     } else {
       // Don't return status code
       return throw Exception(response.statusCode);
@@ -38,14 +36,13 @@ class AuthApi extends ApiHelper {
       "password": password,
     };
 
-    final response = await http.post(
-      buildFullUrl("/auth/register"),
-      headers: defaultHeaders,
-      body: encodeRequestBody(body),
+    final response = await client.post(
+      Uri.parse("/auth/register"),
+      body: client.encodeRequestBody(body),
     );
 
-    if (isResponseSuccessful(response.statusCode)) {
-      return User.fromJson(decodeResponseBody(response.body));
+    if (client.isResponseSuccessful(response.statusCode)) {
+      return User.fromJson(client.decodeResponseBody(response.body));
     } else {
       // Don't return status code
       return throw Exception(response.statusCode);

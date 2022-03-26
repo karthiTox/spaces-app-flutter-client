@@ -135,7 +135,7 @@ class BottomSection extends StatelessWidget {
           child: Text("signin", style: Theme.of(context).textTheme.headline6),
           onPressed: () {
             authProvider.error = "";
-            authProvider.login().then((value) {
+            authProvider.register().then((value) {
               Navigator.of(context).pushNamedAndRemoveUntil(
                 '/auth/userId',
                 (Route<dynamic> route) => false,

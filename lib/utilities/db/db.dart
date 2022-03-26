@@ -1,11 +1,18 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:spaces/data/user.dart';
-import 'package:spaces/utilities/db/auth_DB.dart';
+import 'package:spaces/utilities/db/auth_db.dart';
+import 'package:spaces/utilities/shared_storage.dart';
 
 class DBInterface {
-  final AuthDB authDB = AuthDB();
+  final AuthDB authDB;
 
-  static Future<DBInterface> getInstance() async {
+  DBInterface({
+    required this.authDB,
+  });
+
+  static Future<DBInterface> getInstance({
+    required SharedStorage sharedStorage,
+  }) async {
     await Hive.initFlutter();
 
     // adapters
@@ -13,6 +20,8 @@ class DBInterface {
       Hive.registerAdapter(UserAdapter());
     }
 
-    return DBInterface();
+    return DBInterface(
+      authDB: AuthDB(sharedStorage: sharedStorage),
+    );
   }
 }

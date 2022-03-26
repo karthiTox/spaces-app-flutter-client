@@ -15,4 +15,8 @@ class SharedStorage {
   void setString(String key, String value) {
     prefs.setString(key, value);
   }
+
+  void delString(String key) {
+    prefs.remove(key);
+  }
 }
