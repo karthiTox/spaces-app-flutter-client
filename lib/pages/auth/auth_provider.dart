@@ -79,34 +79,34 @@ class AuthProvider extends ChangeNotifier {
   Timer? handler;
   int waitingTime = 2;
 
-  String _userIdSearchMessage = "";
-  String get userIdSearchMessage => _userIdSearchMessage;
+  bool _isSearchingUserId = false;
+  bool _isUserIdAvailable = false;
+
+  bool get isSearchingUserId => _isSearchingUserId;
+  bool get isUserIdAvailable => _isUserIdAvailable;
 
   void checkUserId(String userId) async {
-    _userIdSearchMessage = "searching...";
-    notifyListeners();
     handler?.cancel();
-    handler = Timer(Duration(seconds: waitingTime), _handle);
+    _isUserIdAvailable = false;
+    _isSearchingUserId = true;
+    notifyListeners();
+    handler = Timer(Duration(seconds: waitingTime), _waitAndcheckUserId);
   }
 
-  void _handle() {
-    if (_userId == userId) {
-      _userRepository
-          .findOneByUserId(userId)
-          .then((user) => {
-                if (user.uid == "")
-                  _userIdSearchMessage = "$userId is available"
-                else
-                  _userIdSearchMessage = "$userId is not available"
-              })
-          .onError((error, stackTrace) => {
-                // if(error.toString().length < 20) _userIdSearchMessage = error.toString()
-              })
-          .whenComplete(() => {notifyListeners()});
+  void _waitAndcheckUserId() {
+    if (userId != "") {
+      _userRepository.findOneByUserId(userId).then((user) {
+        _isUserIdAvailable = user.uid == "" ? true : false;
+      }).catchError((error) {
+        _error = error.toString();
+      }).whenComplete(() {
+        _isSearchingUserId = false;
+        notifyListeners();
+      });
     }
   }
 
-  Future<User> setId() => _userRepository.changeUserId(_userId);
+  Future<User?> changeUserId() => _userRepository.changeUserId(_userId);
 
   // input validators
   final _emailRegEx = RegExp(

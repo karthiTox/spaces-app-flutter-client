@@ -46,17 +46,11 @@ class InputSection extends StatelessWidget {
     const spacing = 20.0;
     final theme = Theme.of(context);
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final authProviderListener =
+        Provider.of<AuthProvider>(context, listen: true);
 
     return ListView(
       children: [
-        // Text(
-        //   "Spaces",
-        //   style: theme.textTheme.headline1,
-        //   textAlign: TextAlign.center,
-        // ),
-
-        // const SizedBox(height: spacing * 0.5),
-
         Text(
           "UserId",
           textAlign: TextAlign.start,
@@ -69,15 +63,30 @@ class InputSection extends StatelessWidget {
         TextField(
           decoration: const InputDecoration(hintText: "user_name"),
           style: theme.textTheme.headline6,
-          onChanged: (value) => authProvider.email = value,
+          onChanged: (userId) {
+            authProvider.userId = userId;
+            authProvider.checkUserId(userId);
+          },
         ),
 
         const SizedBox(height: spacing * 0.5),
 
         Text(
-          "searching...",
+          authProviderListener.isSearchingUserId
+              ? "searching..."
+              : authProvider.userId != ""
+                  ? authProviderListener.isUserIdAvailable
+                      ? "${authProviderListener.userId} is available"
+                      : "${authProviderListener.userId} is not available"
+                  : "",
           textAlign: TextAlign.center,
-          style: theme.textTheme.headline6,
+          style: theme.textTheme.headline6?.copyWith(
+            color: authProviderListener.isSearchingUserId
+                ? Theme.of(context).colorScheme.onBackground
+                : authProviderListener.isUserIdAvailable
+                    ? Theme.of(context).colorScheme.onBackground
+                    : Theme.of(context).colorScheme.error,
+          ),
         ),
       ],
     );
@@ -105,10 +114,13 @@ class BottomSection extends StatelessWidget {
         ),
         const SizedBox(height: spacing),
         ElevatedButton(
-          child: Text("Login", style: Theme.of(context).textTheme.headline6),
+          child: Text(
+            "Let's start",
+            style: Theme.of(context).textTheme.headline6,
+          ),
           onPressed: () {
             authProvider.error = "";
-            authProvider.login().then((value) {
+            authProvider.changeUserId().then((value) {
               Navigator.of(context).pushNamedAndRemoveUntil(
                 '/chats/main',
                 (Route<dynamic> route) => false,
@@ -118,27 +130,6 @@ class BottomSection extends StatelessWidget {
             });
           },
         ),
-        const SizedBox(height: spacing),
-        GestureDetector(
-          child: SizedBox(
-            width: double.infinity,
-            height: 30,
-            child: Text(
-              "Don't have an account?",
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.headline6?.copyWith(
-                    color: Theme.of(context).colorScheme.secondary,
-                  ),
-            ),
-          ),
-          onTap: () {
-            Navigator.pushNamedAndRemoveUntil(
-              context,
-              "/auth/signup",
-              (Route<dynamic> route) => true,
-            );
-          },
-        )
       ],
     );
   }

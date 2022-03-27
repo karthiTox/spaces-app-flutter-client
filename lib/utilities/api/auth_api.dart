@@ -1,6 +1,5 @@
-import 'package:http/http.dart' as http;
 import 'package:spaces/data/user.dart';
-import 'package:spaces/utilities/api/base_client.dart';
+import 'package:spaces/utilities/api/http_client.dart';
 
 class AuthApi {
   // handle the failed responses clearly.

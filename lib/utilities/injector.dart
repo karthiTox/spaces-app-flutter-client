@@ -1,5 +1,4 @@
 import 'package:get_it/get_it.dart';
-import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:mixpanel_flutter/mixpanel_flutter.dart';
 import 'package:spaces/config.dart';
@@ -7,11 +6,10 @@ import 'package:spaces/repositories/auth_repository.dart';
 import 'package:spaces/repositories/chat_repository.dart';
 import 'package:spaces/repositories/user_repository.dart';
 import 'package:spaces/utilities/api/api.dart';
-import 'package:spaces/utilities/api/base_client.dart';
+import 'package:spaces/utilities/api/http_client.dart';
 import 'package:spaces/utilities/authHandler.dart';
 import 'package:spaces/utilities/db.dart';
 import 'package:spaces/utilities/db/db.dart';
-import 'package:spaces/utilities/mix_panel.dart';
 import 'package:spaces/utilities/shared_storage.dart';
 import 'package:spaces/utilities/socket_io.dart';
 
@@ -63,8 +61,8 @@ Future<void> setupLocator() async {
   );
   locator.registerSingleton(
     UserRepository(
-      authHandler: locator.get(),
       api: locator.get(),
+      db: locator.get<DBInterface>(),
     ),
   );
   locator.registerSingleton(

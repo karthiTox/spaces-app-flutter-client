@@ -18,7 +18,7 @@ class HttpClient extends http.BaseClient {
   }
 
   void _log(String url) {
-    log(url, name: "info");
+    log(url, name: "info:httpClient");
   }
 
   @override
@@ -28,8 +28,6 @@ class HttpClient extends http.BaseClient {
     request.headers['Cache-Control'] = 'no-cache';
     request.headers['x-access-token'] =
         sharedStorage.getString("currentUserToken") ?? "";
-
-    log(request.url.toString(), name: "debug");
 
     return _client.send(request);
   }

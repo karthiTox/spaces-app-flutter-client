@@ -132,7 +132,7 @@ class BottomSection extends StatelessWidget {
         ),
         const SizedBox(height: spacing),
         ElevatedButton(
-          child: Text("signin", style: Theme.of(context).textTheme.headline6),
+          child: Text("Next", style: Theme.of(context).textTheme.headline6),
           onPressed: () {
             authProvider.error = "";
             authProvider.register().then((value) {
