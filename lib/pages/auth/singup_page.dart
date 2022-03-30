@@ -119,12 +119,14 @@ class BottomSection extends StatelessWidget {
     const spacing = 20.0;
     final theme = Theme.of(context);
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final authProviderListener =
+        Provider.of<AuthProvider>(context, listen: true);
 
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(
-          Provider.of<AuthProvider>(context, listen: true).error,
+          authProviderListener.error,
           textAlign: TextAlign.center,
           style: theme.textTheme.headline6?.copyWith(
             color: theme.colorScheme.error,
@@ -133,17 +135,19 @@ class BottomSection extends StatelessWidget {
         const SizedBox(height: spacing),
         ElevatedButton(
           child: Text("Next", style: Theme.of(context).textTheme.headline6),
-          onPressed: () {
-            authProvider.error = "";
-            authProvider.register().then((value) {
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                '/auth/userId',
-                (Route<dynamic> route) => false,
-              );
-            }).catchError((error) {
-              authProvider.error = error.toString();
-            });
-          },
+          onPressed: authProviderListener.isLoading
+              ? null
+              : () {
+                  authProvider.error = "";
+                  authProvider.register().then((value) {
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                      '/auth/userId',
+                      (Route<dynamic> route) => true,
+                    );
+                  }).catchError((error) {
+                    authProvider.error = error.toString();
+                  });
+                },
         ),
         const SizedBox(height: spacing),
         GestureDetector(
@@ -158,19 +162,25 @@ class BottomSection extends StatelessWidget {
                   ),
             ),
           ),
-          onTap: () {
-            if (Navigator.canPop(context)) {
-              Navigator.pop(context);
-            } else {
-              Navigator.pushNamedAndRemoveUntil(
-                context,
-                '/auth/login',
-                (Route<dynamic> route) => false,
-              );
-            }
-          },
+          onTap: authProviderListener.isLoading
+              ? null
+              : () {
+                  if (Navigator.canPop(context)) {
+                    Navigator.pop(context);
+                  } else {
+                    moveToStartScreen(context);
+                  }
+                },
         )
       ],
+    );
+  }
+
+  moveToStartScreen(BuildContext context) {
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      '/auth/login',
+      (Route<dynamic> route) => false,
     );
   }
 }

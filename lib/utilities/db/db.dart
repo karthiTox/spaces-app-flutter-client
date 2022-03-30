@@ -18,14 +18,19 @@ class DBInterface {
   }) async {
     await Hive.initFlutter();
 
+    const usersCol = "users";
+
     // adapters
     if (!Hive.isAdapterRegistered(0)) {
       Hive.registerAdapter(UserAdapter());
     }
 
+    // opening boxes
+    if (!Hive.isBoxOpen(usersCol)) await Hive.openBox(usersCol);
+
     return DBInterface(
-      authDB: AuthDB(sharedStorage: sharedStorage),
-      userDB: UserDB(),
+      authDB: AuthDB(sharedStorage: sharedStorage, usersCol: usersCol),
+      userDB: UserDB(usersCol: usersCol),
     );
   }
 }

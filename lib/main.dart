@@ -84,7 +84,10 @@ class MyApp extends StatelessWidget {
       builder: (innerCtx, _) => MaterialApp(
           title: 'Spaces',
           theme: themeData,
-          initialRoute: '/splash',
+          initialRoute:
+              Provider.of<AuthProvider>(innerCtx, listen: false).isAuth()
+                  ? '/chats/main'
+                  : '/auth/login',
           routes: {
             '/splash': (innerCtx) => const Splash(),
             '/auth/login': (innerCtx) => const LoginPage(),

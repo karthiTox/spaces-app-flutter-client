@@ -101,6 +101,8 @@ class BottomSection extends StatelessWidget {
     const spacing = 20.0;
     final theme = Theme.of(context);
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final authProviderListener =
+        Provider.of<AuthProvider>(context, listen: true);
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -118,17 +120,20 @@ class BottomSection extends StatelessWidget {
             "Let's start",
             style: Theme.of(context).textTheme.headline6,
           ),
-          onPressed: () {
-            authProvider.error = "";
-            authProvider.changeUserId().then((value) {
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                '/chats/main',
-                (Route<dynamic> route) => false,
-              );
-            }).catchError((error) {
-              authProvider.error = error.toString();
-            });
-          },
+          onPressed: authProviderListener.isLoading ||
+                  !authProviderListener.isUserIdAvailable
+              ? null
+              : () {
+                  authProvider.error = "";
+                  authProvider.changeUserId().then((value) {
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                      '/chats/main',
+                      (Route<dynamic> route) => false,
+                    );
+                  }).catchError((error) {
+                    authProvider.error = error.toString();
+                  });
+                },
         ),
       ],
     );

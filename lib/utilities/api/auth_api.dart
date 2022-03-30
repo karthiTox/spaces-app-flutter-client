@@ -25,7 +25,9 @@ class AuthApi {
       return User.fromJson(client.decodeResponseBody(response.body));
     } else {
       // Don't return status code
-      return throw Exception(response.statusCode);
+      return throw Exception(
+        "${response.body}/status_code:${response.statusCode}",
+      );
     }
   }
 
@@ -44,7 +46,9 @@ class AuthApi {
       return User.fromJson(client.decodeResponseBody(response.body));
     } else {
       // Don't return status code
-      return throw Exception(response.statusCode);
+      return throw Exception(
+        "${response.body}/status_code:${response.statusCode}",
+      );
     }
   }
 }

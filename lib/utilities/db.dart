@@ -5,7 +5,6 @@ import 'package:hive/hive.dart';
 import 'package:spaces/data/user.dart';
 
 class DB {
-
   final usersCol = "users";
   final chatsCol = "chats";
 
@@ -15,48 +14,50 @@ class DB {
     // adapters
     Hive.registerAdapter(UserAdapter());
 
+    Hive.openBox("users");
+
     return DB();
   }
 
   Future<void> setUser(User user) async {
-    final box = await Hive.openBox(usersCol);
+    final box = Hive.box(usersCol);
     await box.put(user.uid, user);
   }
 
   Future<User> getUser(String uid) async {
-    final box = await Hive.openBox(usersCol);
+    final box = Hive.box(usersCol);
     final user = await box.get(uid) as User;
-    return user; 
+    return user;
   }
 
   // chats reference number saver
   Future<void> setRefernceNumber(String chatId, int refNum) async {
-    final box = await Hive.openBox(chatsCol);
+    final box = Hive.box(chatsCol);
     await box.put(chatId, refNum);
   }
 
   Future<int> getRefernceNumber(String chatId) async {
-    final box = await Hive.openBox(chatsCol);
-    return await box.get(chatId, defaultValue: 0) as int;    
+    final box = Hive.box(chatsCol);
+    return await box.get(chatId, defaultValue: 0) as int;
   }
 
   // this methods are used to save and fetch the current user's auth information.
   // the token is saved seperately
   Future<void> setCurrentUser(User user) async {
-    final box = await Hive.openBox(usersCol);
+    final box = Hive.box(usersCol);
     await box.put("currentUser", user);
     await box.put("currentUserToken", user.token);
   }
 
   Future<User?> getCurrentUser() async {
-    final box = await Hive.openBox(usersCol);
+    final box = Hive.box(usersCol);
     final user = box.get("currentUser", defaultValue: null) as User?;
     user?.token = box.get("currentUserToken", defaultValue: "") as String;
     return user;
   }
 
   Future<void> delCurrentUser() async {
-    final box = await Hive.openBox(usersCol);
+    final box = Hive.box(usersCol);
     box.delete("currentUser");
     box.delete("currentUserToken");
   }
