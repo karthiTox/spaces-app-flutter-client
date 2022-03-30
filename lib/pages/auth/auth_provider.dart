@@ -59,6 +59,16 @@ class AuthProvider extends ChangeNotifier {
 
   set isLoading(bool value) {
     _isLoading = value;
+
+    if (value == true) {
+      Timer(const Duration(seconds: 10), () {
+        if (_isLoading == true) {
+          _isLoading = false;
+          notifyListeners();
+        }
+      });
+    }
+
     notifyListeners();
   }
 
@@ -130,6 +140,16 @@ class AuthProvider extends ChangeNotifier {
   }
 
   void _waitAndcheckUserId() {
+    try {
+      _validateUserId(userId);
+    } catch (e) {
+      _error = error.toString();
+      _isSearchingUserId = false;
+      _isLoading = false;
+      notifyListeners();
+      return;
+    }
+
     if (userId != "") {
       _userRepository.findOneByUserId(userId).then((user) {
         _isUserIdAvailable = user.uid == "" ? true : false;
@@ -144,6 +164,7 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future<User?> changeUserId() {
+    _validateUserId(userId);
     if (isUserIdAvailable != true) throw Exception("$_userId is not available");
     final user = _userRepository.changeUserId(_userId);
     return user;
@@ -155,6 +176,13 @@ class AuthProvider extends ChangeNotifier {
   void _validateEmail(String email) {
     if (!_emailRegEx.hasMatch(email)) {
       throw Exception("email is not valid");
+    }
+  }
+
+  final _userIdRegEx = RegExp(r"^[a-z0-9]+$");
+  void _validateUserId(String email) {
+    if (!_userIdRegEx.hasMatch(email)) {
+      throw Exception("userId is not valid");
     }
   }
 

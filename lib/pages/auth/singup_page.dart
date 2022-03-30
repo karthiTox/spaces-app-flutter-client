@@ -111,8 +111,17 @@ class InputSection extends StatelessWidget {
   }
 }
 
-class BottomSection extends StatelessWidget {
+class BottomSection extends StatefulWidget {
   const BottomSection({Key? key}) : super(key: key);
+
+  @override
+  State<BottomSection> createState() => _BottomSectionState();
+}
+
+class _BottomSectionState extends State<BottomSection> {
+  bool isLoading = false;
+
+  void setLoading(bool value) => setState(() => isLoading = value);
 
   @override
   Widget build(BuildContext context) {
@@ -135,9 +144,10 @@ class BottomSection extends StatelessWidget {
         const SizedBox(height: spacing),
         ElevatedButton(
           child: Text("Next", style: Theme.of(context).textTheme.headline6),
-          onPressed: authProviderListener.isLoading
+          onPressed: isLoading
               ? null
               : () {
+                  setLoading(true);
                   authProvider.error = "";
                   authProvider.register().then((value) {
                     Navigator.of(context).pushNamedAndRemoveUntil(
@@ -146,32 +156,11 @@ class BottomSection extends StatelessWidget {
                     );
                   }).catchError((error) {
                     authProvider.error = error.toString();
+                  }).whenComplete(() {
+                    setLoading(false);
                   });
                 },
         ),
-        const SizedBox(height: spacing),
-        GestureDetector(
-          child: SizedBox(
-            width: double.infinity,
-            height: 30,
-            child: Text(
-              "Already have an account?",
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.headline6?.copyWith(
-                    color: Theme.of(context).colorScheme.secondary,
-                  ),
-            ),
-          ),
-          onTap: authProviderListener.isLoading
-              ? null
-              : () {
-                  if (Navigator.canPop(context)) {
-                    Navigator.pop(context);
-                  } else {
-                    moveToStartScreen(context);
-                  }
-                },
-        )
       ],
     );
   }

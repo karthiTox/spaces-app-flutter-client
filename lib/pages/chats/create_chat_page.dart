@@ -20,19 +20,20 @@ class CreateChatPage extends StatelessWidget {
       ),
       body: Container(
         margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
-        child: const Body(),
+        child: const BodyTest(),
       ),
-      floatingActionButton: FloatingActionButton.extended(
+      floatingActionButton: FloatingActionButton(
         onPressed: () => {
-          if(Provider.of<ChatsProvider>(context, listen: false).isSelectedUserNotEmpty())
+          if (Provider.of<ChatsProvider>(context, listen: false)
+              .isSelectedUserNotEmpty())
             Navigator.pushNamed(context, "/chats/create/confirm")
-          else 
+          else
             Navigator.pop(context)
         },
-        icon: Icon(Icons.navigate_next),
+        child: Icon(Icons.navigate_next),
         focusColor: Colors.grey,
         foregroundColor: Colors.white,
-        label: Text('next'),
+        backgroundColor: Theme.of(context).colorScheme.primary,
         elevation: 10,
       ),
     );
@@ -92,9 +93,7 @@ class Body extends StatelessWidget {
               },
             ),
           ),
-          
         if (chatsProvider.selectedUsers.isNotEmpty) const SizedBox(height: 5),
-
         Expanded(
           child: ListView.builder(
             itemCount: chatsProvider.users.length,
@@ -116,6 +115,90 @@ class Body extends StatelessWidget {
                 ),
               );
             },
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class BodyTest extends StatelessWidget {
+  const BodyTest({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final chatsProvider = Provider.of<ChatsProvider>(context);
+
+    return Column(
+      children: [
+        Container(
+          height: 50,
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            children: [
+              Text("test"),
+              Text("test"),
+              Text("test"),
+              Text("test"),
+              Text("test"),
+              Text("test"),
+              Text("test"),
+              Text("test"),
+              Text("test"),
+              Text("test"),
+              Text("test"),
+              Text("test"),
+              Text("test"),
+              Text("test"),
+              Text("test"),
+              Text("test"),
+              Text("test"),
+              Text("test"),
+              Text("test"),
+              Text("test"),
+              Text("test"),
+              Text("test"),
+              Text("test"),
+              Text("test"),
+              Text("test"),
+              Text("test"),
+              Text("test"),
+            ],
+          ),
+        ),
+        Expanded(
+          flex: 3,
+          child: ListView(
+            scrollDirection: Axis.vertical,
+            children: [
+              Text("test"),
+              Text("test"),
+              Text("test"),
+              Text("test"),
+              Text("test"),
+              Text("test"),
+              Text("test"),
+              Text("test"),
+              Text("test"),
+              Text("test"),
+              Text("test"),
+              Text("test"),
+              Text("test"),
+              Text("test"),
+              Text("test"),
+              Text("test"),
+              Text("test"),
+              Text("test"),
+              Text("test"),
+              Text("test"),
+              Text("test"),
+              Text("test"),
+              Text("test"),
+              Text("test"),
+              Text("test"),
+              Text("test"),
+              Text("test"),
+            ],
           ),
         ),
       ],

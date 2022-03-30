@@ -7,15 +7,10 @@
 
 // Failed to compile application.
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:spaces/data/chat.dart';
-import 'package:spaces/data/message.dart';
 
 import 'package:spaces/pages/chats/chats_provider.dart';
-import 'package:spaces/pages/widgets/chat_card_widget.dart';
-import 'package:spaces/pages/widgets/user_widget.dart';
 
 class ChatCardsPage extends StatelessWidget {
   const ChatCardsPage({Key? key}) : super(key: key);

@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:spaces/pages/auth/login_page.dart';
 import 'package:spaces/pages/auth/auth_provider.dart';
 import 'package:spaces/pages/auth/singup_page.dart';
+import 'package:spaces/pages/auth/start_page.dart';
 import 'package:spaces/pages/auth/userid_page.dart';
 import 'package:spaces/pages/chats/chat_cards_page.dart';
 import 'package:spaces/pages/chats/chats_page.dart';
@@ -87,9 +88,10 @@ class MyApp extends StatelessWidget {
           initialRoute:
               Provider.of<AuthProvider>(innerCtx, listen: false).isAuth()
                   ? '/chats/main'
-                  : '/auth/login',
+                  : '/auth/start',
           routes: {
             '/splash': (innerCtx) => const Splash(),
+            '/auth/start': (innerCtx) => const StartPage(),
             '/auth/login': (innerCtx) => const LoginPage(),
             '/auth/signup': (innerCtx) => const SignupPage(),
             '/auth/userId': (innerCtx) => const UserIdPage(),
